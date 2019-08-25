@@ -1,0 +1,35 @@
+@@ -45,20 +45,11 @@
+ bed 
+-di
+ s
+-consol
+ a
+-te
++d
+ ly u
+@@ -163,12 +163,14 @@
+ nd t
+-ull
++aff
+ e
++ta
+ . Ye
+@@ -440,24 +440,27 @@
+ mood of 
+-h
++d
+ o
+-pel
++wntrodd
+ e
+-ss
++n
+  depress
+@@ -532,17 +532,8 @@
+ n a 
+-hopeless 
+ fail
+@@ -882,425 +882,8 @@
+ r it
+-. Do hand me another one%0Aof those sandwiches; playing the devoted brother takes it out of me.%0ABut poor old Mill is no go! The fellows were nice enough, of course;%0Athey danced with her whenever I asked them, but the worst of it was%0Athey would not repeat the offense. You know Mill dances something like%0Aan animated telegraph pole, and though she is a brick and all that,%0Ashe hasn%E2%80%99t an ounce of frivolous conversation
+ . Do
