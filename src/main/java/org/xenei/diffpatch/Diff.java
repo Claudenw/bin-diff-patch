@@ -31,7 +31,7 @@ import org.xenei.diffpatch.diff.DiffFragment;
 import org.xenei.span.LongSpan.ComparatorByLength;
 import org.xenei.span.NumberUtils;
 import org.xenei.spanbuffer.SpanBuffer;
-import org.xenei.spanbuffer.SpanBuffer.Walker;
+import org.xenei.spanbuffer.Walker;
 import org.xenei.spanbuffer.Factory;
 import org.xenei.spanbuffer.NoMatchException;
 

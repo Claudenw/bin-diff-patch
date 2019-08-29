@@ -48,6 +48,7 @@ import org.xenei.diffpatch.patch.PatchFragment;
 import org.xenei.diffpatch.patch.ReverseVisitor;
 import org.xenei.span.LongSpan;
 import org.xenei.spanbuffer.SpanBuffer;
+import org.xenei.spanbuffer.similarity.Bitap;
 import org.xenei.spanbuffer.Factory;
 import org.xenei.spanbuffer.NoMatchException;
 
@@ -65,16 +66,14 @@ public class Patch implements Serializable {
 	 */
 	public static final double DEFAULT_DELETE_THRESHOLD = 0.5d;
 	/**
-	 * When deleting a large block of text (over ~64 characters), how close do the
+	 * When deleting a large block of text (over 32 bytes), how close do the
 	 * contents have to be to match the expected contents. (0.0 = perfection, 1.0 =
-	 * very loose). Note that Match_Threshold controls how closely the end points of
+	 * very loose). Note that match Threshold controls how closely the end points of
 	 * a delete need to match.
 	 */
 	private double deleteThreshold = Patch.DEFAULT_DELETE_THRESHOLD;
 
-	private double matchThreshold = org.xenei.spanbuffer.Matcher.DEFAULT_MATCH_THRESHOLD;
-
-	private int matchDistance = org.xenei.spanbuffer.Matcher.DEFAULT_MATCH_DISTANCE;
+	private Bitap.Config config = new Bitap.Config();
 
 	/**
 	 * ther serial version.
@@ -224,6 +223,13 @@ public class Patch implements Serializable {
 	}
 
 	/**
+	 * Set the match configuraiton.
+	 */
+	public void setMatchConfig(Bitap.Config config) {
+		this.config = new Bitap.Config(config);
+	}
+
+	/**
 	 * Set the match threshold for applying matches.
 	 * <p>
 	 * When determining if an imperfect match is close enough, how close do the
@@ -231,12 +237,12 @@ public class Patch implements Serializable {
 	 * very loose).
 	 * </p>
 	 *
-	 * @see org.xenei.spanbuffer.Matcher#DEFAULT_MATCH_THRESHOLD
+	 * @see org.xenei.spanbuffer.MatcherI#DEFAULT_MATCH_THRESHOLD
 	 *
 	 * @param matchThreshold the new threshold to use.
 	 */
 	public void setMatchThreshold(final double matchThreshold) {
-		this.matchThreshold = matchThreshold;
+		this.config = new Bitap.Config(this.config.getDistance(), matchThreshold);
 	}
 
 	/**
@@ -247,12 +253,12 @@ public class Patch implements Serializable {
 	 * very loose).
 	 * </p>
 	 *
-	 * @see org.xenei.spanbuffer.Matcher#DEFAULT_MATCH_DISTANCE
+	 * @see org.xenei.spanbuffer.MatcherI#DEFAULT_MATCH_DISTANCE
 	 *
 	 * @param matchDistance the new distance to use.
 	 */
 	public void setMatchDistance(final int matchDistance) {
-		this.matchDistance = matchDistance;
+		this.config = new Bitap.Config(matchDistance, this.config.getThreshold());
 	}
 
 	/* package private for testing */
@@ -792,44 +798,56 @@ public class Patch implements Serializable {
 		 * results track which edits were applied.
 		 */
 		final BitSet results = new BitSet(fragments.size());
-
+		Bitap.Result result = null;
+		Bitap bitap = new Bitap(config);
 		for (final PatchFragment patchFrag : fragments) {
 			final long expected_loc = patchFrag.getRightSpan().getOffset() + delta;
+			long searchLoc;
 			final SpanBuffer left = patchFrag.getLeftBuffer();
 			long startLoc;
 			long endLoc;
 			if (!patched.contains(expected_loc)) {
 				throw new IOException("Input to short");
 			}
-			final org.xenei.spanbuffer.Matcher matcher = patched.getMatcher();
-			matcher.setThreshold(matchThreshold);
-			matcher.setDistance(matchDistance);
 			try {
 				if (left.getLength() > Integer.SIZE) {
 					/*
 					 * patch_splitMax will only provide an oversized pattern in the case of a
 					 * monster delete.
 					 */
+					searchLoc = patched.makeAbsolute(expected_loc);
+					result = bitap.execute(patched, left.head(Integer.SIZE), searchLoc);
+					if (result == null) {
+						throw new NoMatchException();
+					}
+					startLoc = result.getAbsIndex();
 
-					startLoc = matcher.matchFrom(left.head(Integer.SIZE), expected_loc);
-
-					endLoc = matcher.matchFrom(left.tail(Integer.SIZE),
-							(expected_loc + left.getLength()) - Integer.SIZE);
+					searchLoc = patched.makeAbsolute(expected_loc + left.getLength() - Integer.SIZE);
+					result = bitap.execute(patched, left.tail(Integer.SIZE), searchLoc);
+					if (result == null) {
+						throw new NoMatchException();
+					}
+					endLoc = result.getAbsIndex();
 					if (startLoc >= endLoc) {
 						// Can't find valid trailing context. Drop this patch.
 						startLoc = -1;
 					}
 
 				} else {
-					try {
-						startLoc = matcher.matchFrom(left, expected_loc);
+
+					searchLoc = patched.makeAbsolute(expected_loc);
+					result = bitap.execute(patched, left, searchLoc);
+					if (result != null) {
+						startLoc = result.getAbsIndex();
 						endLoc = -1;
-					} catch (final NoMatchException expected) {
+					} else {
+
 						// Subtract the delta for this failed patch from subsequent
 						// patches.
 						delta -= patchFrag.getRightSpan().getLength() - patchFrag.getLeftSpan().getLength();
-						throw (expected);
+						throw new NoMatchException();
 					}
+
 				}
 				results.set(fragmentNumber);
 				delta = startLoc - expected_loc;

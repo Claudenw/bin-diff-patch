@@ -1,7 +1,5 @@
 import java.util.LinkedList;
 
-
-
 public class ReferenceRunner {
 
 //	public static void main(String[] args) throws Exception
@@ -132,16 +130,13 @@ public class ReferenceRunner {
 //	}
 //	
 
+	public static void main(String[] args) throws Exception {
+		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
 
-	public static void main(String[] args) throws Exception
-	{
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
-
-		
-		Reference r  = new Reference();
+		Reference r = new Reference();
 
 //		 dmp.Patch_DeleteThreshold = 0.5f;
-			//
+		//
 //				    // Compensate for failed patch.
 //				    dmp.Match_Threshold = 0.0f;
 //				    dmp.Match_Distance = 0;
@@ -150,35 +145,56 @@ public class ReferenceRunner {
 //				    boolArray = (boolean[]) results[1];
 //				    resultStr = results[0] + "\t" + boolArray[0] + "\t" + boolArray[1];
 //				    assertEquals("patch_apply: Compensate for failed patch.", "ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567YYYYYYYYYY890\tfalse\ttrue", resultStr);
-	    LinkedList<Reference.Patch> patches = r.patch_make("abcdefghijklmnopqrstuvwxyz--------------------1234567890", "abcXXXXXXXXXXdefghijklmnopqrstuvwxyz--------------------1234567YYYYYYYYYY890");
-	    for (Reference.Patch p : patches)
-	    {
-	    	System.out.println( p.toString() );
-	    }
-	    r.Match_Threshold = 0.0f;
-	    r.Match_Distance = 0;
-	    Object[] results = r.patch_apply(patches, "ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567890");
+
+		LinkedList<Reference.Patch> patches = r
+				.patch_make("x1234567890123456789012345678901234567890123456789012345678901234567890y", "xabcy");
+		for (Reference.Patch p : patches) {
+			System.out.println(p.toString());
+		}
+		r.Match_Threshold = 0.5f;
+		r.Match_Distance = 1000;
+		Object[] results = r.patch_apply(patches,
+				"x12345678901234567890---------------++++++++++---------------12345678901234567890y");
+
+//		assertEquals(1, result.getUsed().cardinality());
+//		assertFalse(result.getUsed().get(0));
+//		assertTrue(result.getUsed().get(1));
+//		assertEquals("xabc12345678901234567890---------------++++++++++---------------12345678901234567890y",
+//				result.getResult().getText());
+
+//	    LinkedList<Reference.Patch> patches = r.patch_make("abcdefghijklmnopqrstuvwxyz--------------------1234567890", "abcXXXXXXXXXXdefghijklmnopqrstuvwxyz--------------------1234567YYYYYYYYYY890");
+//	    for (Reference.Patch p : patches)
+//	    {
+//	    	System.out.println( p.toString() );
+//	    }
+//	    r.Match_Threshold = 0.0f;
+//	    r.Match_Distance = 0;
+//	    Object[] results = r.patch_apply(patches, "ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567890");
+
 //	    results = dmp.patch_apply(patches, "The quick red rabbit jumps over the tired tiger.");
-	    boolean[] boolArray = (boolean[]) results[1];
-	    String resultStr = results[0] + "\t" + boolArray[0] + "\t" + boolArray[1];
-		boolean matches =  "ABCDEFGHIJKLMNOPQRSTUVWXYZ--------------------1234567YYYYYYYYYY890".equals( results[0].toString());
-		System.out.println( "Match: "+matches);
+		boolean[] boolArray = (boolean[]) results[1];
+		String resultStr = results[0] + "\t" + boolArray[0] + "\t" + boolArray[1];
+		System.out.println("Results: " + resultStr);
+		boolean matches = "xabc12345678901234567890---------------++++++++++---------------12345678901234567890y"
+				.equals(results[0].toString());
+		System.out.println("Match: " + matches);
 //	    assertEquals("patch_apply: Partial match.", "That quick red rabbit jumped over a tired tiger.\ttrue\ttrue", resultStr);
 
-	    System.out.println( "++++++++++++++ NEW ++++++++++++++");
-	    for (Reference.Patch p : patches)
-	    {
-	    	System.out.println( p.toString() );
-	    }
+		System.out.println("++++++++++++++ NEW ++++++++++++++");
+		for (Reference.Patch p : patches) {
+			System.out.println(p.toString());
+		}
 //	    results = dmp.patch_apply(patches, "The quick red rabbit jumps over the tired tiger.");
 //	    boolArray = (boolean[]) results[1];
 //	    resultStr = results[0] + "\t" + boolArray[0] + "\t" + boolArray[1];
 //	    assertEquals("patch_apply: Partial match.", "That quick red rabbit jumped over a tired tiger.\ttrue\ttrue", resultStr);
 
-	  //  System.out.println( r.patch_toText(patches));
-	//    assertEquals("patch_splitMax: #1.", "@@ -1,32 +1,46 @@\n+X\n ab\n+X\n cd\n+X\n ef\n+X\n gh\n+X\n ij\n+X\n kl\n+X\n mn\n+X\n op\n+X\n qr\n+X\n st\n+X\n uv\n+X\n wx\n+X\n yz\n+X\n 012345\n@@ -25,13 +39,18 @@\n zX01\n+X\n 23\n+X\n 45\n+X\n 67\n+X\n 89\n+X\n 0\n", dmp.patch_toText(patches));
+		// System.out.println( r.patch_toText(patches));
+		// assertEquals("patch_splitMax: #1.", "@@ -1,32 +1,46 @@\n+X\n ab\n+X\n
+		// cd\n+X\n ef\n+X\n gh\n+X\n ij\n+X\n kl\n+X\n mn\n+X\n op\n+X\n qr\n+X\n
+		// st\n+X\n uv\n+X\n wx\n+X\n yz\n+X\n 012345\n@@ -25,13 +39,18 @@\n zX01\n+X\n
+		// 23\n+X\n 45\n+X\n 67\n+X\n 89\n+X\n 0\n", dmp.patch_toText(patches));
 
-	
 //		}
 //		
 //		Object[] out = r.patch_apply(lp, newB.getText());
@@ -188,7 +204,7 @@ public class ReferenceRunner {
 //		}
 //		
 //		ApplyResult result = patch.apply(newB);
-		
+
 	}
 
 }
