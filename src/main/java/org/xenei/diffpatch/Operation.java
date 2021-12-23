@@ -23,51 +23,51 @@ package org.xenei.diffpatch;
  * <p>
  * The data structure representing a diff is a Linked list of Diff.Fragment
  * objects. For example:
- * 
+ *
  * <pre>
  * { Diff(Operation.DELETE, "Hello"), Diff(Operation.INSERT, "Goodbye"), Diff(Operation.EQUAL, " world.") }
  * </pre>
- * 
+ *
  * means: delete "Hello", add "Goodbye" and keep " world."
  * </p>
  */
 public enum Operation {
-	DELETE('-'), INSERT('+'), EQUAL(' ');
+    DELETE('-'), INSERT('+'), EQUAL(' ');
 
-	private char diffChar; // price of each apple
+    private char diffChar; // price of each apple
 
-	// Constructor
-	Operation(final char diffChar) {
-		this.diffChar = diffChar;
-	}
+    // Constructor
+    Operation(final char diffChar) {
+        this.diffChar = diffChar;
+    }
 
-	public char getChar() {
-		return diffChar;
-	}
+    public char getChar() {
+        return diffChar;
+    }
 
-	/**
-	 * Create an operation from a char. The char must be one of:
-	 * <ul>
-	 * <li>'-' : Delete</li>
-	 * <li>'+' : Insert</li>
-	 * <li>' ' : Equal</li>
-	 * </ul>
-	 * 
-	 * @param ch the character to create the operation from.
-	 * @return the operation
-	 * @throws IllegalArgumentException if not one of the specified characters.
-	 */
-	public static Operation fromChar(final char ch) {
-		switch (ch) {
-		case '-':
-			return DELETE;
-		case '+':
-			return INSERT;
-		case ' ':
-			return EQUAL;
-		default:
-			throw new IllegalArgumentException("character must be '-'. '+' or ' '");
-		}
+    /**
+     * Create an operation from a char. The char must be one of:
+     * <ul>
+     * <li>'-' : Delete</li>
+     * <li>'+' : Insert</li>
+     * <li>' ' : Equal</li>
+     * </ul>
+     *
+     * @param ch the character to create the operation from.
+     * @return the operation
+     * @throws IllegalArgumentException if not one of the specified characters.
+     */
+    public static Operation fromChar(final char ch) {
+        switch (ch) {
+        case '-':
+            return DELETE;
+        case '+':
+            return INSERT;
+        case ' ':
+            return EQUAL;
+        default:
+            throw new IllegalArgumentException("character must be '-'. '+' or ' '");
+        }
 
-	}
+    }
 }

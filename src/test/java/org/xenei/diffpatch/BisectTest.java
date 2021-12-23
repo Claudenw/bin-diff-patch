@@ -22,33 +22,30 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import org.junit.Test;
-import org.xenei.diffpatch.Bisect;
-import org.xenei.diffpatch.Diff;
-import org.xenei.diffpatch.Operation;
 import org.xenei.diffpatch.diff.DiffFragment;
 import org.xenei.spanbuffer.Factory;
 
 public class BisectTest {
 
-	@Test
-	public void bisectTestNormal() throws Exception {
-		Diff diff = new Bisect(Long.MAX_VALUE).bisect(Factory.wrap("cat"), Factory.wrap("map"));
-		List<DiffFragment> lst = diff.getFragments();
-		assertEquals(5, lst.size());
-		assertEquals(new DiffFragment(Operation.DELETE, Factory.wrap("c")), lst.get(0));
-		assertEquals(new DiffFragment(Operation.INSERT, Factory.wrap("m")), lst.get(1));
-		assertEquals(new DiffFragment(Operation.EQUAL, Factory.wrap("a")), lst.get(2));
-		assertEquals(new DiffFragment(Operation.DELETE, Factory.wrap("t")), lst.get(3));
-		assertEquals(new DiffFragment(Operation.INSERT, Factory.wrap("p")), lst.get(4));
-	}
+    @Test
+    public void bisectTestNormal() throws Exception {
+        Diff diff = new Bisect(Long.MAX_VALUE).bisect(Factory.wrap("cat"), Factory.wrap("map"));
+        List<DiffFragment> lst = diff.getFragments();
+        assertEquals(5, lst.size());
+        assertEquals(new DiffFragment(Operation.DELETE, Factory.wrap("c")), lst.get(0));
+        assertEquals(new DiffFragment(Operation.INSERT, Factory.wrap("m")), lst.get(1));
+        assertEquals(new DiffFragment(Operation.EQUAL, Factory.wrap("a")), lst.get(2));
+        assertEquals(new DiffFragment(Operation.DELETE, Factory.wrap("t")), lst.get(3));
+        assertEquals(new DiffFragment(Operation.INSERT, Factory.wrap("p")), lst.get(4));
+    }
 
-	@Test
-	public void bisectTestTimeout() throws Exception {
-		Diff diff = new Bisect(0).bisect(Factory.wrap("cat"), Factory.wrap("map"));
-		List<DiffFragment> lst = diff.getFragments();
-		assertEquals(2, lst.size());
-		assertEquals(new DiffFragment(Operation.DELETE, Factory.wrap("cat")), lst.get(0));
-		assertEquals(new DiffFragment(Operation.INSERT, Factory.wrap("map")), lst.get(1));
-	}
+    @Test
+    public void bisectTestTimeout() throws Exception {
+        Diff diff = new Bisect(0).bisect(Factory.wrap("cat"), Factory.wrap("map"));
+        List<DiffFragment> lst = diff.getFragments();
+        assertEquals(2, lst.size());
+        assertEquals(new DiffFragment(Operation.DELETE, Factory.wrap("cat")), lst.get(0));
+        assertEquals(new DiffFragment(Operation.INSERT, Factory.wrap("map")), lst.get(1));
+    }
 
 }

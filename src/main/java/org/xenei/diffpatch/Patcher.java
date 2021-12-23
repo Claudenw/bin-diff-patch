@@ -31,7 +31,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
-import org.xenei.diffpatch.Patch;
 import org.xenei.diffpatch.Patch.ApplyResult;
 import org.xenei.spanbuffer.Factory;
 
@@ -41,63 +40,63 @@ import org.xenei.spanbuffer.Factory;
  */
 public class Patcher {
 
-	private static Options getOptions() {
-		Options options = new Options();
-		options.addRequiredOption("i", "input", true, "Input file");
-		options.addRequiredOption("p", "patch", true, "Patch file");
-		options.addOption("o", "output", true, "Output file, defualts to stdout");
-		options.addOption("r", "reverse", false, "Reverse patch");
-		options.addOption("h", "help", false, "This help");
-		return options;
-	}
+    private static Options getOptions() {
+        Options options = new Options();
+        options.addRequiredOption("i", "input", true, "Input file");
+        options.addRequiredOption("p", "patch", true, "Patch file");
+        options.addOption("o", "output", true, "Output file, defualts to stdout");
+        options.addOption("r", "reverse", false, "Reverse patch");
+        options.addOption("h", "help", false, "This help");
+        return options;
+    }
 
-	public static void doHelp() {
-		HelpFormatter formatter = new HelpFormatter();
-		String header = "Apply a patch to an input file";
-		String footer = "";
-		formatter.printHelp(Patcher.class.getCanonicalName(), header, getOptions(), footer, true);
-	}
+    public static void doHelp() {
+        HelpFormatter formatter = new HelpFormatter();
+        String header = "Apply a patch to an input file";
+        String footer = "";
+        formatter.printHelp(Patcher.class.getCanonicalName(), header, getOptions(), footer, true);
+    }
 
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
 
-		CommandLineParser parser = new DefaultParser();
-		CommandLine cmd = null;
-		try {
-			cmd = parser.parse(getOptions(), args);
-		} catch (ParseException e) {
-			System.err.println(e.getMessage());
-			doHelp();
-			System.exit(1);
-		}
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd = null;
+        try {
+            cmd = parser.parse(getOptions(), args);
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+            doHelp();
+            System.exit(1);
+        }
 
-		if (cmd.hasOption("h")) {
-			doHelp();
-		}
+        if (cmd.hasOption("h")) {
+            doHelp();
+        }
 
-		File in = new File(cmd.getOptionValue("i"));
-		if (!in.exists()) {
-			System.err.println(String.format("Input file %s does not exist.", cmd.getOptionValue("i")));
-		}
+        File in = new File(cmd.getOptionValue("i"));
+        if (!in.exists()) {
+            System.err.println(String.format("Input file %s does not exist.", cmd.getOptionValue("i")));
+        }
 
-		File patch = new File(cmd.getOptionValue("p"));
-		if (!patch.exists()) {
-			System.err.println(String.format("Patch File %s does not exist.", cmd.getOptionValue("p")));
-		}
+        File patch = new File(cmd.getOptionValue("p"));
+        if (!patch.exists()) {
+            System.err.println(String.format("Patch File %s does not exist.", cmd.getOptionValue("p")));
+        }
 
-		Patch p = new Patch(new FileInputStream(patch));
-		if (cmd.hasOption("r")) {
-			p = p.reverse();
-		}
-		ApplyResult result = p.apply(Factory.wrap(in));
+        Patch p = new Patch(new FileInputStream(patch));
+        if (cmd.hasOption("r")) {
+            p = p.reverse();
+        }
+        ApplyResult result = p.apply(Factory.wrap(in));
 
-		if (cmd.hasOption("o")) {
-			File o = new File(cmd.getOptionValue("o"));
-			try (OutputStream out = new FileOutputStream(o)) {
-				IOUtils.copyLarge(result.getResult().getInputStream(), out);
-			}
-		} else {
-			IOUtils.copyLarge(result.getResult().getInputStream(), System.out);
-		}
-	}
+        if (cmd.hasOption("o")) {
+            File o = new File(cmd.getOptionValue("o"));
+            try (OutputStream out = new FileOutputStream(o)) {
+                IOUtils.copyLarge(result.getResult().getInputStream(), out);
+            }
+        } else {
+            IOUtils.copyLarge(result.getResult().getInputStream(), System.out);
+        }
+    }
 
 }

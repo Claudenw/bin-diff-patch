@@ -1,6 +1,6 @@
 /*
  * This code is reference implementation test code.
- * 
+ *
  * DO NOT EDIT
  */
 //package com.ibm.common.diffpatch;
@@ -39,7 +39,7 @@
 //	 * limitations under the License.
 //	 */
 //
-//	
+//
 //
 //	private Diff diff;
 //	//  private diff_match_patch dmp;
@@ -47,7 +47,7 @@
 //	//  private diff_match_patch.Operation EQUAL = diff_match_patch.Operation.EQUAL;
 //	//  private diff_match_patch.Operation INSERT = diff_match_patch.Operation.INSERT;
 //
-//	  
+//
 //	  protected void setUp() {
 //		  diff = new Diff();
 //	    // Create an instance of the diff_match_patch object.
@@ -57,7 +57,7 @@
 //	  //  DIFF TEST FUNCTIONS
 //
 ///**
-//  Handled by SpanContractTest 
+//  Handled by SpanContractTest
 //*
 //	  public void testDiffCommonPrefix() {
 //	    // Detect any common prefix.
@@ -94,7 +94,7 @@
 //
 //	  /**
 //	   * in Diff test halfMatchTest2
-//	   
+//
 //	  public void testDiffHalfmatch() {
 //	    // Detect a halfmatch.
 //	    dmp.Diff_Timeout = 1;
@@ -333,7 +333,7 @@
 //
 //	  /**
 //	   * in DiffTest
-//	   
+//
 //	  public void testDiffCleanupEfficiency() {
 //	    // Cleanup operationally trivial equalities.
 //	    dmp.Diff_EditCost = 4;
@@ -928,5 +928,5 @@
 //	    }
 //	    return myDiffList;
 //	  }
-//	
+//
 //}

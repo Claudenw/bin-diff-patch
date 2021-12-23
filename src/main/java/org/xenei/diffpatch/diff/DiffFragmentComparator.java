@@ -25,11 +25,11 @@ import java.util.Comparator;
  */
 public class DiffFragmentComparator implements Comparator<DiffFragment>, Serializable {
 
-	private static final long serialVersionUID = 7378329874367257089L;
+    private static final long serialVersionUID = 7378329874367257089L;
 
-	@Override
-	public int compare(final DiffFragment o1, final DiffFragment o2) {
-		return Long.compare(o1.getOffset(), o2.getOffset());
-	}
+    @Override
+    public int compare(final DiffFragment o1, final DiffFragment o2) {
+        return Long.compare(o1.getOffset(), o2.getOffset());
+    }
 
 }

@@ -22,11 +22,11 @@ package org.xenei.diffpatch.patch;
  */
 public interface PatchFragmentVisitor {
 
-	/**
-	 * Visit the patch fragment.
-	 * 
-	 * @param fragment the fragment to visit.
-	 */
-	void visit(PatchFragment fragment);
+    /**
+     * Visit the patch fragment.
+     *
+     * @param fragment the fragment to visit.
+     */
+    void visit(PatchFragment fragment);
 
 }

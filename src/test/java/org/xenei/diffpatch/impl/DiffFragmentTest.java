@@ -31,44 +31,44 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class DiffFragmentTest {
-	private DiffFragment fragment;
-	private SpanBuffer bb;
+    private DiffFragment fragment;
+    private SpanBuffer bb;
 
-	@Before
-	public void setup() {
-		bb = Factory.wrap("Hello World");
-		fragment = new DiffFragment(Operation.DELETE, bb);
-	}
+    @Before
+    public void setup() {
+        bb = Factory.wrap("Hello World");
+        fragment = new DiffFragment(Operation.DELETE, bb);
+    }
 
-	@Test
-	public void startsWithTest() throws IOException {
-		DiffFragment other = new DiffFragment(Operation.EQUAL, Factory.wrap("Hello"));
-		assertTrue(fragment.startsWith(other));
-		assertFalse(other.startsWith(fragment));
-		other = new DiffFragment(Operation.EQUAL, Factory.wrap("World"));
-		assertFalse(fragment.startsWith(other));
-		assertFalse(other.startsWith(fragment));
-	}
+    @Test
+    public void startsWithTest() throws IOException {
+        DiffFragment other = new DiffFragment(Operation.EQUAL, Factory.wrap("Hello"));
+        assertTrue(fragment.startsWith(other));
+        assertFalse(other.startsWith(fragment));
+        other = new DiffFragment(Operation.EQUAL, Factory.wrap("World"));
+        assertFalse(fragment.startsWith(other));
+        assertFalse(other.startsWith(fragment));
+    }
 
-	@Test
-	public void endsWithTest() throws IOException {
-		DiffFragment other = new DiffFragment(Operation.EQUAL, Factory.wrap("Hello"));
-		assertFalse(fragment.endsWith(other));
-		assertFalse(other.endsWith(fragment));
-		other = new DiffFragment(Operation.EQUAL, Factory.wrap("World"));
-		assertTrue(fragment.endsWith(other));
-		assertFalse(other.endsWith(fragment));
+    @Test
+    public void endsWithTest() throws IOException {
+        DiffFragment other = new DiffFragment(Operation.EQUAL, Factory.wrap("Hello"));
+        assertFalse(fragment.endsWith(other));
+        assertFalse(other.endsWith(fragment));
+        other = new DiffFragment(Operation.EQUAL, Factory.wrap("World"));
+        assertTrue(fragment.endsWith(other));
+        assertFalse(other.endsWith(fragment));
 
-	}
+    }
 
-	@Test
-	public void getOperationTest() {
-		assertEquals(Operation.DELETE, fragment.getOperation());
-	}
+    @Test
+    public void getOperationTest() {
+        assertEquals(Operation.DELETE, fragment.getOperation());
+    }
 
-	@Test
-	public void getTextTest() throws IOException {
-		assertEquals("Hello World", fragment.getText());
-	}
+    @Test
+    public void getTextTest() throws IOException {
+        assertEquals("Hello World", fragment.getText());
+    }
 
 }
